@@ -2,9 +2,9 @@
 
 //Window* window=nullptr;
 
-Window::Window()
+Window::Window(std::string name, int width, int height)
 {
-
+	this->_name = name;
 }
 
 Window::~Window()
@@ -15,15 +15,17 @@ Window::~Window()
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	//GetWindowLong(hwnd,)
+
 	switch (msg)
 	{
 	case WM_CREATE:
 	{
 		// Event fired when the window is created
-		// collected here..
+			// collected here..
 		Window* window = (Window*)((LPCREATESTRUCT)lparam)->lpCreateParams;
 		// .. and then stored for later lookup
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)window);
+
 		window->onCreate();
 		break;
 	}
@@ -60,7 +62,7 @@ bool Window::init()
 	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 	wc.hInstance = NULL;
-	wc.lpszClassName = L"MyWindowClass";
+	wc.lpszClassName = L"SpyGame";
 	wc.lpszMenuName = L"";
 	wc.style = NULL;
 	wc.lpfnWndProc = &WndProc;
@@ -72,29 +74,29 @@ bool Window::init()
 		window = this;*/
 
 		//Creation of the window
-	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"MyWindowClass", L"DirectX Application", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768,
+	this->_m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"SpyGame", L"SpyGame", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768,
 		NULL, NULL, NULL, this);
 
 	//if the creation fail return false
-	if (!m_hwnd)
+	if (!this->_m_hwnd)
 		return false;
 
 	//show up the window
-	::ShowWindow(m_hwnd, SW_SHOW);
-	::UpdateWindow(m_hwnd);
+	::ShowWindow(this->_m_hwnd, SW_SHOW);
+	::UpdateWindow(this->_m_hwnd);
 
 
 
 
 	//set this flag to true to indicate that the window is initialized and running
-	m_is_run = true;
+	this->_m_is_run = true;
 
 
 
 	return true;
 }
 
-bool Window::broadCast()
+bool Window::broadcast()
 {
 	MSG msg;
 
@@ -115,8 +117,9 @@ bool Window::broadCast()
 
 bool Window::release()
 {
+	this->_m_is_run = false;
 	//Destroy the window
-	if (!::DestroyWindow(m_hwnd))
+	if (!::DestroyWindow(this->_m_hwnd))
 		return false;
 
 	return true;
@@ -124,18 +127,20 @@ bool Window::release()
 
 bool Window::isRun()
 {
-	return this->m_is_run;
+	return this->_m_is_run;
 }
 
 void Window::onCreate()
 {
+
 }
 
 void Window::onUpdate()
 {
+
 }
 
 void Window::onDestroy()
 {
-	m_is_run = false;
+	this->_m_is_run = false;
 }

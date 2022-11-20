@@ -12,7 +12,7 @@ int main()
 	}
 	while (app.isRun())
 	{
-		app.broadCast();
+		app.broadcast();
 	}
 	std::cout << "YOUR MAMA DONE" << std::endl;
 	return 0;
