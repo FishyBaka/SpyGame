@@ -8,7 +8,7 @@ class Window
 {
 public:
 	//big 3
-	Window(std::string name="cancer", int width=1020, int height=800);
+	Window(LPCWSTR name=L"Fuck", int width=1020, int height=800);
 	~Window();
 	bool init();
 	bool release();
@@ -17,14 +17,15 @@ public:
 	bool isRun();
 
 	//EVENTS
-	virtual void onCreate()=0;
-	virtual void onUpdate()=0;
+	virtual void onCreate() {};
+	virtual void onUpdate() {};
 	virtual void onDestroy();
 
 protected:
 	HWND _m_hwnd;
+	WNDCLASSEX* _wc;
 	bool _m_is_run;
-	std::string _name;
+	LPCWSTR _name;
 	int _width;
 	int _height;
 };

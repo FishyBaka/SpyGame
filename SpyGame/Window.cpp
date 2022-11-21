@@ -1,16 +1,7 @@
 #include "Window.h"
+#include <iostream>
 
 //Window* window=nullptr;
-
-Window::Window(std::string name, int width, int height)
-{
-	this->_name = name;
-}
-
-Window::~Window()
-{
-
-}
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -47,40 +38,60 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	return NULL;
 }
 
+Window::Window(LPCWSTR name, int width, int height)
+{
+	this->_name = name;
+	
+	this->_width = width;
+	this->_height = height;
+
+	//Setting up WNDCLASSEX object
+	WNDCLASSEX wc;
+	{
+		wc.cbClsExtra = NULL;
+		wc.cbSize = sizeof(WNDCLASSEX);
+		wc.cbWndExtra = NULL;
+		wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
+		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+		wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+		wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+		wc.hInstance = NULL;
+
+		wc.lpszClassName = this->_name;
+		wc.lpszMenuName = L"";
+		wc.style = NULL;
+		wc.lpfnWndProc = &WndProc;
+	}
+	this->_wc = &wc;
+	this->_m_hwnd = NULL;
+	this->_m_is_run = false;
+}
+
+Window::~Window()
+{
+
+}
+
 
 bool Window::init()
 {
 
-
-	//Setting up WNDCLASSEX object
-	WNDCLASSEX wc;
-	wc.cbClsExtra = NULL;
-	wc.cbSize = sizeof(WNDCLASSEX);
-	wc.cbWndExtra = NULL;
-	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
-	wc.hInstance = NULL;
-	wc.lpszClassName = L"SpyGame";
-	wc.lpszMenuName = L"";
-	wc.style = NULL;
-	wc.lpfnWndProc = &WndProc;
-
-	if (!::RegisterClassEx(&wc)) // If the registration of class will fail, the function will return false
+	if (!::RegisterClassEx(this->_wc)) // If the registration of class will fail, the function will return false
+	{
+		std::cout << "this cancer";
 		return false;
-
-	/*if (!window)
-		window = this;*/
-
+	}
 		//Creation of the window
-	this->_m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"SpyGame", L"SpyGame", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768,
+	this->_m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, this->_name, this->_name, WS_OVERLAPPEDWINDOW, 
+		CW_USEDEFAULT, CW_USEDEFAULT, this->_width, this->_height,
 		NULL, NULL, NULL, this);
 
 	//if the creation fail return false
 	if (!this->_m_hwnd)
+	{
+		std::cout << "now this cancer";
 		return false;
-
+	}
 	//show up the window
 	::ShowWindow(this->_m_hwnd, SW_SHOW);
 	::UpdateWindow(this->_m_hwnd);
@@ -128,16 +139,6 @@ bool Window::release()
 bool Window::isRun()
 {
 	return this->_m_is_run;
-}
-
-void Window::onCreate()
-{
-
-}
-
-void Window::onUpdate()
-{
-
 }
 
 void Window::onDestroy()

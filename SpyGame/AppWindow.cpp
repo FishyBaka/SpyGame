@@ -1,6 +1,5 @@
 #include "AppWindow.h"
 
-
 void AppWindow::onCreate()
 {
 	Window::onCreate();
@@ -16,5 +15,4 @@ void AppWindow::onUpdate()
 void AppWindow::onDestroy()
 {
 	Window::onDestroy();
-
 }

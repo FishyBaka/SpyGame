@@ -5,7 +5,7 @@
 
 int main() 
 {
-	AppWindow app;
+	AppWindow app = AppWindow(L"fuck off", 300, 600);
 	if (!app.init())
 	{
 		return 1;
